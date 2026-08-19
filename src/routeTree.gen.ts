@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
 import { Route as AppAprobacionesRouteImport } from './routes/app.aprobaciones'
 import { Route as AppFinanzasRouteImport } from './routes/app.finanzas'
 import { Route as AppNuevoRouteImport } from './routes/app.nuevo'
@@ -29,6 +30,11 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAprobacionesRoute = AppAprobacionesRouteImport.update({
@@ -50,6 +56,7 @@ const AppNuevoRoute = AppNuevoRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/app/admin': typeof AppAdminRoute
   '/app/aprobaciones': typeof AppAprobacionesRoute
   '/app/finanzas': typeof AppFinanzasRoute
   '/app/nuevo': typeof AppNuevoRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/aprobaciones': typeof AppAprobacionesRoute
   '/app/finanzas': typeof AppFinanzasRoute
   '/app/nuevo': typeof AppNuevoRoute
@@ -66,6 +74,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/app/admin': typeof AppAdminRoute
   '/app/aprobaciones': typeof AppAprobacionesRoute
   '/app/finanzas': typeof AppFinanzasRoute
   '/app/nuevo': typeof AppNuevoRoute
@@ -76,16 +85,24 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/app/admin'
     | '/app/aprobaciones'
     | '/app/finanzas'
     | '/app/nuevo'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/aprobaciones' | '/app/finanzas' | '/app/nuevo' | '/app'
+  to:
+    | '/'
+    | '/app/admin'
+    | '/app/aprobaciones'
+    | '/app/finanzas'
+    | '/app/nuevo'
+    | '/app'
   id:
     | '__root__'
     | '/'
     | '/app'
+    | '/app/admin'
     | '/app/aprobaciones'
     | '/app/finanzas'
     | '/app/nuevo'
@@ -120,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/aprobaciones': {
       id: '/app/aprobaciones'
       path: '/aprobaciones'
@@ -145,6 +169,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppAprobacionesRoute: typeof AppAprobacionesRoute
   AppFinanzasRoute: typeof AppFinanzasRoute
   AppNuevoRoute: typeof AppNuevoRoute
@@ -152,6 +177,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppAprobacionesRoute: AppAprobacionesRoute,
   AppFinanzasRoute: AppFinanzasRoute,
   AppNuevoRoute: AppNuevoRoute,
